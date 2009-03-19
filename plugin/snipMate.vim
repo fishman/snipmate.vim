@@ -55,14 +55,15 @@ fun s:MakeSnippet(text, scope, multisnip)
 endf
 
 fun! GetSnippets(dir)
-	let slash = has('win16') || has('win32') || has('win64') ? '\\' : '/'
-  let snippetFiles = split(globpath(expand(a:dir), '**/*.snippet'), '\n')
-  for fullpath in snippetFiles
-    let tail = strpart(fullpath, strlen(expand(a:dir)))
+	let slash = !&ssl && (has('win16') || has('win32') || has('win64')) ? '\\' : '/'
+	for path in split(globpath(a:dir, '*'), "\n")
+		let tail = strpart(path, strlen(expand(a:dir)))
+		let ft = substitute(tail, '^/\([^/]*\).*', '\1', '')
 
-    let filetype = substitute(tail, '^/\([^/]*\).*', '\1', '')
-    let keyword = substitute(tail, '^/[^/]*\(.*\)', '\1', '')
-			call s:ProcessFile(fullpath, filetype, slash)
+		try
+			call ExtractSnips(path, ft)
+		catch
+		endtry
   endfor
 endf
 
