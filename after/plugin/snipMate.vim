@@ -24,12 +24,5 @@ if !isdirectory(snippets_dir) | finish | endif
 if isdirectory(snippets_dir.'_')
 	call ExtractSnips(snippets_dir.'_', '_')
 endif
-au FileType * call s:GetSnippets()
-fun s:GetSnippets()
-	for ft in split(&ft, '\.')
-		if !exists('g:did_ft_'.ft) && isdirectory(g:snippets_dir.ft)
-			call ExtractSnips(g:snippets_dir.ft, ft)
-		endif
-	endfor
-endf
+
 " vim:noet:sw=4:ts=4:ft=vim
